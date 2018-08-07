@@ -9,7 +9,7 @@ let body = JSON.stringify({
 const imap = {
   user: "",
   password: "",
-  host: "t",
+  host: "",
   port: 993, // imap port
   tls: true,// use secure connection
   tlsOptions: { rejectUnauthorized: false }
