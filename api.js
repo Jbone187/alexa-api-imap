@@ -1,7 +1,7 @@
 const notifier = require('mail-notifier');
-var https = require("https");
+let https = require("https");
 
-var body = JSON.stringify({
+let body = JSON.stringify({
     "notification": "Hello World!",
     "accessCode": "ACCESS_CODE"
 });
@@ -36,9 +36,5 @@ n.on('end', () => n.start()).on('mail', function(mail){
             "Content-Length": Buffer.byteLength(body)
         }
     }).end(body);
-
-
-
-
 
 }).start();
