@@ -1,40 +1,49 @@
 const notifier = require('mail-notifier');
-let https = require("https");
+
+const https = require("https");
+
+console.log('Api is Running');
 
 let body = JSON.stringify({
-    "notification": "Hello World!",
-    "accessCode": "ACCESS_CODE"
+"notification": "The Camera has been Triggered",
+"accessCode": ""
 });
- 
+
 const imap = {
-  user: "",
-  password: "",
-  host: "",
-  port: 993, // imap port
-  tls: true,// use secure connection
-  tlsOptions: { rejectUnauthorized: false }
+user: "",
+password: "",
+host: "",
+port: 993, // imap port
+tls: true,// use secure connection
+tlsOptions: { rejectUnauthorized: false }
 };
- 
+
 notifier(imap)
-  .on('mail', mail => console.log(mail))
-  .start();
+.on('mail', mail => console.log(mail))
+.start();
 
 
-  const n = notifier(imap);
+const n = notifier(imap);
+
 n.on('end', () => n.start()).on('mail', function(mail){
-    console.log(mail.from[0].address, mail.subject)
-    console.log("Got Mail")
 
+console.log(mail.from[0].address, mail.subject)
 
+let request = https.request({
+hostname: "api.notifymyecho.com",
+path: "/v1/NotifyMe",
+method: "POST",
+headers: {
+"Content-Type": "application/json",
+"Content-Length": Buffer.byteLength(body)
+}
+});
 
-    https.request({
-        hostname: "api.notifymyecho.com",
-        path: "/v1/NotifyMe",
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Content-Length": Buffer.byteLength(body)
-        }
-    }).end(body);
+request.on('error', function(err) {
+console.log(err);
+});
+
+request.end(body)
+
 
 }).start();
