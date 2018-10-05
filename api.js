@@ -5,7 +5,7 @@ const https = require("https");
 console.log('Api is Running');
 
 let body = JSON.stringify({
-"notification": "The Camera has been Triggered",
+"notification": "",
 "accessCode": ""
 });
 
@@ -18,14 +18,16 @@ tls: true,// use secure connection
 tlsOptions: { rejectUnauthorized: false }
 };
 
+
 notifier(imap)
-.on('mail', mail => console.log(mail))
-.start();
+.on('mail', mail => console.log(mail)).start();
 
 
 const n = notifier(imap);
 
 n.on('end', () => n.start()).on('mail', function(mail){
+
+if(mail.subject === "Activity Alert: Person detected"){
 
 console.log(mail.from[0].address, mail.subject)
 
@@ -43,7 +45,12 @@ request.on('error', function(err) {
 console.log(err);
 });
 
-request.end(body)
+request.end(body);
+
+}else{
+
+console.log("Waiting on Data");
+};
 
 
 }).start();
